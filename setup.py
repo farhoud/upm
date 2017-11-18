@@ -7,10 +7,10 @@ from setuptools import setup, find_packages
 
 ###################################################################
 
-NAME = "upm"
+NAME = "upmcli"
 PACKAGES = find_packages(where="src")
-META_PATH = os.path.join("src", "upm", "__init__.py")
-KEYWORDS = ["packaging", "package manager", "container", "docker"]
+META_PATH = os.path.join("src", "upmcli", "__init__.py")
+KEYWORDS = ["packaging", "package manager", "container", "docker", "cli"]
 CLASSIFIERS = [
     "Development Status :: 2 - Pre-Alpha",
     "Intended Audience :: System Administrators",
@@ -57,6 +57,11 @@ def find_meta(meta):
 if __name__ == "__main__":
     setup(
         name=NAME,
+        entry_points={
+            'console_scripts': [
+                'upm = upmcli.cli:main',
+            ],
+        },
         description=find_meta("description"),
         license=find_meta("license"),
         url=find_meta("uri"),
