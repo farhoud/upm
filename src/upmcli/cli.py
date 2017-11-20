@@ -1,3 +1,5 @@
+from click import command, echo
+
 ascii_snek = """\
     --..,_                     _,.--.
        `'.'.                .'`__ o  `;__.
@@ -6,8 +8,9 @@ ascii_snek = """\
               `'--....--'`
 """
 
+@command()
 def main():
-    print(ascii_snek)
+    echo(ascii_snek)
     
 if __name__ == '__main__':
     main()
