@@ -4,7 +4,6 @@ import re
 
 from setuptools import setup, find_packages
 
-
 ###################################################################
 
 NAME = 'upmcli'
@@ -23,7 +22,7 @@ CLASSIFIERS = [
     'Topic :: System :: Archiving :: Packaging',
 ]
 INSTALL_REQUIRES = [
-    'click'
+    'click', 'PyYAML'
 ]
 
 ###################################################################
