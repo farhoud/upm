@@ -5,7 +5,7 @@ __description__ = 'Universal Package Manager'
 __uri__ = 'https://github.com/assister-ai/upm'
 __doc__ = __description__ + ' <' + __uri__ + '>'
 
-__author__ = 'Keyvan Mir Mohammad Sadeghi, Mehdi Balouchi'
+__author__ = 'Keyvan Mir Mohammad Sadeghi, Mehdi Balouchi, Farhoud Mojahedzadeh'
 __email__ = 'keyvan.m.sadeghi@gmail.com'
 
 __license__ = 'MIT'
