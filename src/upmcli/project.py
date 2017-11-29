@@ -2,7 +2,9 @@ import yaml
 
 
 class Project:
-    def __init__(self, name, author, version, description, docker, endpoints, services=[]):
+    def __init__(self, name, author, version, description, docker, endpoints, services=None):
+        if services is None:
+            services = []
         self.name = name
         self.author = author
         self.description = description

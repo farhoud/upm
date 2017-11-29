@@ -2,7 +2,7 @@ import click
 import os
 import yaml
 
-from upmcli.Project import Project
+from upmcli.project import Project
 
 FILE_NAME = "upm.yml"
 cwd = os.getcwd()
