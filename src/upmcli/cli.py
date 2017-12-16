@@ -2,7 +2,7 @@ import click
 import os
 import yaml
 
-from upmcli.project import Project
+from .project import Project
 
 FILE_NAME = "upm.yml"
 cwd = os.getcwd()
@@ -14,18 +14,6 @@ ascii_snek = """\
             '.`'--....--'`.'
               `'--....--'`
 """
-
-
-@click.command()
-@click.argument('action')
-def main(action):
-    if action == "init":
-        init_project()
-
-
-if __name__ == '__main__':
-    main()
-
 
 def file_path_generator(path):
     file = path + "/" + FILE_NAME
@@ -55,4 +43,29 @@ def init_project():
             yaml.dump(project.to_dict(), file, default_flow_style=False)
             file.close()
         print("project inited")
+
+
+# @click.argument('package')
+def install_package(package):
+    click.echo(package)
+
+
+actions = {
+    'init': init_project,
+    'install': install_package
+}
+
+
+@click.command()
+@click.argument('action')
+@click.argument('args', nargs=-1)
+def main(action, args):
+    actions[action](args)
+
+
+
+
+if __name__ == '__main__':
+    main()
+
 
