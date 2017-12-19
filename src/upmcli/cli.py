@@ -1,6 +1,7 @@
 import click
 import os
 import yaml
+import docker
 
 from .project import Project
 
@@ -26,6 +27,15 @@ def is_exist(path):
     return os.path.exists(file)
 
 
+def load_yml(path):
+    if os.path.isdir(path):
+        file_content = open('%s/upm.yml' % path, 'r')
+    else:
+        file_content = open(path, 'r')
+    yml_object = yaml.load(file_content)
+    return yml_object
+
+
 def init_project():
     if is_exist(cwd):
         print("project inited before")
@@ -45,9 +55,14 @@ def init_project():
         print("project inited")
 
 
-# @click.argument('package')
-def install_package(package):
-    click.echo(package)
+def install_package(args):
+    # @Todo check if args[0] is a path to a yml file or a package name
+    package_path = args[0]
+    package_yml = load_yml(package_path)
+    client = docker.from_env()
+    if 'dockerfile' in package_yml.keys():
+        image = client.images.build(fileobj=open(package_yml['dockerfile'], 'rb'), quiet=False)
+        # client.containers.run(image, command=package_yml['entrypoints']['node'])
 
 
 actions = {
@@ -60,7 +75,10 @@ actions = {
 @click.argument('action')
 @click.argument('args', nargs=-1)
 def main(action, args):
-    actions[action](args)
+    if action in actions.keys():
+        actions[action](args)
+    else:
+        click.echo('Unknown command %s' % action)
 
 
 
