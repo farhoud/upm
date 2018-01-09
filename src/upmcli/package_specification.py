@@ -134,9 +134,9 @@ def install_package(path):
 
 
 def publish_package():
-    click.echo("project most be git repo and have public remote, which the branch u wish ")
+    click.echo("project most be git repo and have public remote, will publish current HEAD")
     try:
         repo = Repo(search_parent_directories=True)
-
+        # repo
     except InvalidGitRepositoryError:
         logging.error("this is not git repository please init git and with public remote before start publishing")

@@ -1,0 +1,7 @@
+author: neo4j
+docker: /home/farhoud/workspace/upm-registry/neo4j/Dockerfile
+description: neo4j package
+entrypoints:
+  neo4j: neo4j
+name: neo4j
+version: 0.0.1

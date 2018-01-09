@@ -1,0 +1,8 @@
+author: farhoud
+docker: /home/farhoud/workspace/upm-registry/node/Dockerfile
+description: testing new featers
+entrypoints:
+  node: node
+  npm: npm
+name: node
+version: 0.0.1
