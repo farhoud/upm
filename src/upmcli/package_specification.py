@@ -4,7 +4,7 @@ import click
 import docker
 import yaml
 from git import Repo, InvalidGitRepositoryError
-from upmcli.utils import file_path_generator, image_name, log_output
+from upmcli.utils import file_path_generator, image_name, log_output, port_mapper
 from upmcli.entrypoints_index import EntrypointsIndex
 from upmcli.config import *
 
@@ -41,7 +41,8 @@ class PackageSpecification:
     def save_to_file(self, path=None):
         # logging.debug('save to file path is' + path)
         with open(path if path is not None else self.yml_path, 'w') as file:
-            yaml.dump(self.to_dict(), file, default_flow_style=False)
+            yaml.dump(self.to_dict(), file, default_flow_style=False, encoding='utf-8', allow_unicode=True,
+                           explicit_start=True)
             file.close()
 
     def get_yml_file(self):
@@ -50,6 +51,7 @@ class PackageSpecification:
 
 def from_prompt():
     logging.info('loading yml')
+    logging.info('new version')
     cwd = os.getcwd()
     logging.info(cwd)
     from upmcli.utils import package_exists, file_path_generator
@@ -70,22 +72,23 @@ def from_prompt():
         entrypoints_flag = True
         entrypoints = {}
         while entrypoints_flag:
-            key = click.prompt('Please enter entrypoint name', default='run', type=str)
-            value = click.prompt('please enter command', default='npm start', type=str)
-            entrypoints[key] = value
+            entry_name = click.prompt('Please enter entrypoint name', default='run', type=str)
+            entry_command = click.prompt('please enter command', default='npm start', type=str)
+            entry_ports = click.prompt('please enter expose ports', default='80,443', type=str)
+            entrypoints[entry_name] = {"command": entry_command, "ports": port_mapper(entry_ports)}
             entrypoints_flag = click.prompt('more entrypoint?', default=False, type=bool)
         file_path = file_path_generator(cwd)
         package = PackageSpecification(file_path, name, author, version, description, entrypoints, docker)
         logging.debug(package)
         logging.debug(package.to_dict())
         with open(file_path, 'w') as file:
-            yaml.dump(package.to_dict(), file, default_flow_style=False)
+            yaml.dump(package.to_dict(), file, default_flow_style=False, encoding='utf-8', allow_unicode=True)
             file.close()
 
         os.mkdir('.upm')
         i_entrypoints = {}
         for key, value in package.entrypoints.items():
-            i_entrypoints[key] = {'cmd': value}
+            i_entrypoints[key] = value
         e_index = EntrypointsIndex(
             path=os.path.join(os.getcwd(), MAIN_DIR, ENTRY_INDEX_FILE_NAME), entrypoints=i_entrypoints)
         e_index.save_to_file()
@@ -137,6 +140,11 @@ def publish_package():
     click.echo("project most be git repo and have public remote, will publish current HEAD")
     try:
         repo = Repo(search_parent_directories=True)
-        # repo
     except InvalidGitRepositoryError:
         logging.error("this is not git repository please init git and with public remote before start publishing")
+    if not repo.is_dirty():
+        submit_package()
+
+
+def submit_package():
+    pass

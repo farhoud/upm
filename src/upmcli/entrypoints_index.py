@@ -21,7 +21,7 @@ class EntrypointsIndex:
     def add_entrypoints(self, entrypoints, image_name):
         # @TODO check for duplications
         for key, value in entrypoints.items():
-            self.entrypoints[key] = {'cmd': value}
+            self.entrypoints[key] = value
             if image_name is not None:
                 self.entrypoints[key]['image'] = image_name
 
@@ -30,10 +30,17 @@ class EntrypointsIndex:
             entrypoints = {'entrypoints': self.entrypoints}
             yaml.dump(entrypoints, file, default_flow_style=False)
 
-    def find_entrypoint(self, cmd):
-        entrypoint = self.entrypoints[cmd]
+    def find_entrypoint(self, cmd, ports=None, args=[]):
+        entrypoint = self.entrypoints[cmd].copy()
+        if ports:
+            if 'ports' in entrypoint:
+                entrypoint['ports'] = {**ports, **entrypoint['ports']}
+            else:
+                entrypoint['ports'] = ports
         print(self.entrypoints)
         if 'image' in entrypoint:
-            return entrypoint
-        i_cmd = entrypoint['cmd'].split(' ')[0]
-        return self.find_entrypoint(i_cmd)
+            return entrypoint, args
+        i_cmd = entrypoint['command'].split(' ')[0]
+        args = args + entrypoint['command'].split(' ')[1:]
+        return self.find_entrypoint(i_cmd, entrypoint['ports'], args)
+

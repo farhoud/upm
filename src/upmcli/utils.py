@@ -84,6 +84,19 @@ def create_network(project_name):
     return network
 
 
+def port_mapper(str):
+    mapped_ports = {}
+    removed_space_str = str.replace(" ", "")
+    port_list = removed_space_str.split(',')
+    for port_map in port_list:
+        if ":" in port_map:
+            ports = port_map.split(":")
+            mapped_ports[int(ports[0])] = int(port_map[1])
+        else:
+            mapped_ports[int(port_map)] = int(port_map)
+    return mapped_ports
+
+
 def check_network(name=None):
     client = get_docker_hi_client()
     project_network = network_name(name)
@@ -108,3 +121,7 @@ def get_user_id():
 # def fetch_package(path):
 #     dirpath = tempfile.mkdtemp()
 #     shutil.copy2(path, dirpath)
+
+
+def my_unicode_repr(self, data):
+    return self.represent_str(data.encode('utf-8'))

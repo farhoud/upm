@@ -61,7 +61,7 @@ if __name__ == '__main__':
         entry_points={
             'console_scripts': [
                 'upm = upmcli.cli:main',
-                'upx = upmcli.upx.cli:main'
+                'upx = upx.cli:main'
             ],
         },
         description=find_meta('description'),
